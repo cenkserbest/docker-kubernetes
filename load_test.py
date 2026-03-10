@@ -5,8 +5,8 @@ import sys
 
 # The URL of your local Kubernetes service
 URL = "http://localhost:80/stress"
-NUM_THREADS = 10
-REQUESTS_PER_THREAD = 100
+NUM_THREADS = 40
+REQUESTS_PER_THREAD = 50
 
 def send_requests(thread_id):
     print(f"Thread {thread_id} starting...")
