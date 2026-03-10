@@ -5,7 +5,7 @@ This repository contains the deployment configurations and source code to demons
 ---
 
 ## 🛠️ Preparation (Initial Setup)
-Open a terminal in this directory (`Assignment1`) and execute the following commands in order:
+Open a terminal in the directory and execute the following commands in order:
 
 **1. Build the initial "Version 1" (v1) image:**
 ```bash
