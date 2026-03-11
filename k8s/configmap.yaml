@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: flask-demo-config
 data:
-  APP_VERSION: "2.0"
+  APP_VERSION: "1.0"
