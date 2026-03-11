@@ -43,7 +43,8 @@ Best practices dictate separating configuration from code. This demo shows how t
 1. Open the `k8s/configmap.yaml` file. Change the value `APP_VERSION: "1.0"` to `"1.5 Beta"` and save the file.
 2. Apply the configuration change to the cluster: `kubectl apply -f k8s/configmap.yaml`
 3. Trigger a restart so the Pods pick up the new configuration: `kubectl rollout restart deployment flask-demo-deployment`
-4. Check the browser to verify that the version text has dynamically updated to "1.5 Beta".
+4. Check the browser to verify that the version text has dynamically updated to "1.5 Beta" (The color will also turn Green).
+5. **Important Cleanup:** Before proceeding to the next demos, revert the `APP_VERSION` back to `"1.0"` in `k8s/configmap.yaml`, apply it (`kubectl apply -f k8s/configmap.yaml`), and restart the deployment (`kubectl rollout restart deployment flask-demo-deployment`) so it returns to Blue.
 
 ---
 
@@ -72,12 +73,15 @@ This scenario demonstrates dynamic scaling based on CPU utilization thresholds.
 
 ## 🔄 DEMO 6: Zero-Downtime Deployment
 Upgrading the application to Version 2.0 (Green Theme) without any service interruption.
-1. Revert the ConfigMap version. Open `k8s/configmap.yaml`, set `APP_VERSION` to `"2.0"`, and save.
-2. Apply the ConfigMap: `kubectl apply -f k8s/configmap.yaml`
-3. Build the new Docker image tagged as v2: `docker build -t flask-k8s-demo:v2 .`
-4. Initiate the Rolling Update:
-   `kubectl set image deployment/flask-demo-deployment flask-demo-container=flask-k8s-demo:v2`
-5. Continuously refresh the browser. Observe the seamless transition from the blue (V1) interface to the green (V2) interface without encountering any connection drops or errors.
+1. Build the new Docker image tagged as v2: `docker build -t flask-k8s-demo:v2 .`
+2. Group the Environment Variable and Image updates into a single atomic release:
+   ```bash
+   kubectl rollout pause deployment/flask-demo-deployment
+   kubectl set env deployment/flask-demo-deployment APP_VERSION=2.0
+   kubectl set image deployment/flask-demo-deployment flask-demo-container=flask-k8s-demo:v2
+   kubectl rollout resume deployment/flask-demo-deployment
+   ```
+3. Continuously refresh the browser. Observe the seamless transition from the blue (V1) interface to the green (V2) interface without encountering any connection drops or errors.
 
 ---
 
